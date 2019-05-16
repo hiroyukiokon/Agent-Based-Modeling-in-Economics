@@ -1,4 +1,6 @@
-globals [ fruit-and-veg fruit-and-veg-prices mean-items ] ; f&v&prices are whole sale prices.
+globals [ fruit-and-veg fruit-and-veg-prices mean-items ]
+; fruit-and-veg-prices are a list of whole sale prices.
+
 ;------------------------------------------------------------
 breed [shoppers shopper]
 breed [traders trader]
@@ -6,9 +8,12 @@ breed [traders trader]
 ;------------------------------------------------------------
 
 shoppers-own [ shopping-list spent ]
-traders-own [ stock prices]
+; spent is a variable that records the amount of money shopper spend.
 
+traders-own [ stock prices]
+; price is a list of prices of the products for sale
 ;--------------------------------------------------
+
 to setup
   clear-all
 
@@ -16,9 +21,11 @@ to setup
 
   set fruit-and-veg [
     "apples" "bananas" "oranges" "plums" "mangoes" "grapes"
-    "cabbage" "potatoes" "carrots" "lettuce" "tomatoes" "beans"]
+    "cabbage" "potatoes" "carrots" "lettuce" "tomatoes" "beans"
+  ]
 
   ; set the wholesale prices of the items randomly between 1 and 100
+  ; making a list of prices of all products
   set fruit-and-veg-prices n-values (length fruit-and-veg)[ 1 + random 100 ]
 
 
@@ -36,7 +43,7 @@ to setup
 
       set prices []
 
-      ; mark-up rates are random, between 1% and 30%
+      ; mark-up rates are randomly determined, between 1% and 30%
       let  mark-up (1 + random 30) / 100
 
       foreach stock [ ?? ->
@@ -52,8 +59,12 @@ to setup
     set size 1.5
     setxy random-pxcor random-pycor
     set color lime
+
     ; give each shopper a random list of produce to buy
+    ; the length of each list is between 1 and 8
     set shopping-list n-of (1 + random 8) fruit-and-veg
+
+    set spent 0
   ]
 
   set mean-items mean [ length shopping-list] of shoppers
@@ -145,7 +156,7 @@ n-shoppers
 n-shoppers
 0
 20
-8.0
+10.0
 1
 1
 NIL
@@ -220,7 +231,7 @@ n-items-stocked
 n-items-stocked
 1
 10
-7.0
+5.0
 1
 1
 NIL
