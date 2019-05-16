@@ -1,25 +1,39 @@
 globals [ fruit-and-veg mean-items ]
+
+;; The "fruit-and-veg" is a list of all the kinds of fruits and vegetables.
+;; The "mean-items" is the average numberod items remaining on shoppers' lists.
+;; when mean-items equal 0, all shoppings are over.
+
+
 ;------------------------------------------------------------
 breed [shoppers shopper]
 breed [traders trader]
+
+
 
 ;------------------------------------------------------------
 
 shoppers-own [ shopping-list ]
 traders-own [ stock ]
-
+;; each shopper has diffrent shopping list.
+;; each trader has different list of items for sale.
 ;--------------------------------------------------
+
+
+
 to setup
   clear-all
 
-  ; list of all fruit and veg
+  ; list of names of all fruits and vegs
+  ; there are 12 different kinds of fruits and vegs.
 
   set fruit-and-veg [
-    "apples" "bananas" "oranges" "plums" "mangoes" "grapes"
+    "apples"  "bananas"  "oranges"  "plums"  "mangoes"  "grapes"
     "cabbage" "potatoes" "carrots" "lettuce" "tomatoes" "beans"]
 
 
   ; positions of a row of stalls
+  ; xs is local variable to be a list of numbers.
   let xs [-12 -9 -6 -3 0 3 6 9 12]
   foreach xs [ ? ->
     create-traders 1 [
@@ -27,9 +41,11 @@ to setup
       set size 1.5
       setxy ? 0
       set color white
-      ; give each trader some kinds of produce to sell
-      set stock n-of n-items-stocked fruit-and-veg
+
+      ; give each trader some kinds of items to sell
       ; n-items-stocked is defined by the silider on the interface
+      set stock n-of n-items-stocked fruit-and-veg
+
     ]
   ]
 
@@ -40,24 +56,29 @@ to setup
     set size 1.5
     setxy random-pxcor random-pycor
     set color lime
+
     ; give each shopper a random list of produce to buy
     set shopping-list n-of (1 + random 8) fruit-and-veg
   ]
 
+  ;; calculating the average number of item on the shoppers' lists still needed to buy.
   set mean-items mean [ length shopping-list] of shoppers
 
 
   reset-ticks
 end
 
+
+
 ;-----------------------------------------------------------
 
 to go
 
   ; for each shopper in turn that still has something to buy
+  ; that is, for shoppers whose shopping-list is nor empy.
   ask shoppers with [not empty? shopping-list]
      [
-      ; choose a stall
+      ; choose one stall(=trader) to go
       let stall one-of traders
 
       ; go to that stall
@@ -65,8 +86,9 @@ to go
       while [ patch-here != [patch-here] of stall ]
         [ forward 0.005 * walking-speed ]
 
+      ; at the selected stall
       ; buy everything on my shopping-list that is for sale
-      ; at this stall
+
 
       let purchases filter [? -> member? ? [stock] of stall] shopping-list
 
@@ -131,7 +153,7 @@ n-shoppers
 n-shoppers
 0
 20
-16.0
+20.0
 1
 1
 NIL
@@ -205,8 +227,8 @@ SLIDER
 n-items-stocked
 n-items-stocked
 1
-10
-7.0
+12
+5.0
 1
 1
 NIL
